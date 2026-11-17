@@ -1,0 +1,464 @@
+/* ============================================================
+   Mobile & Material 3 UI Enhancements
+   - Material 3 aesthetic (clean geometry, elevation, ripples)
+   - Dynamic text size scaling (small, normal, large, xlarge)
+   - Drawer touch isolation (drawer doesn't touch/scroll background)
+   - Code editor & placeholder maker layout fixes
+   - Text wrap & overflow protections (no single letter breakage)
+   - Safe vertical & horizontal scrolling
+   - Seamless rectangular toolbar buttons (no background peeking)
+   - Single clean outline highlight on input selection
+   ============================================================ */
+
+/* Text Size Scaling */
+html[data-font-size="small"] {
+  font-size: 14px;
+}
+html[data-font-size="normal"],
+html:not([data-font-size]) {
+  font-size: 16px;
+}
+html[data-font-size="large"] {
+  font-size: 18px;
+}
+html[data-font-size="xlarge"] {
+  font-size: 20px;
+}
+
+/* Material 3 Root & Touch Bounds */
+:root {
+  --m3-radius-sm: 8px;
+  --m3-radius-md: 12px;
+  --m3-radius-lg: 16px;
+  --m3-radius-pill: 9999px;
+  --m3-elevation-1: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --m3-elevation-2: 0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Prevent text clipping and horizontal breakage across all containers */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body, .dt-main, .dt-shell, .dt-inset {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Fixed Word Wrapping: Preserve words together, do NOT split single letters to next line */
+p, span, h1, h2, h3, h4, h5, h6, label, div {
+  overflow-wrap: break-word;
+  word-break: normal !important;
+  hyphens: none !important;
+}
+
+/* Single-line badges, chips, tabs, and format indicators */
+.dt-sub-format,
+.dt-sub-pane-head,
+.dt-sub-stats,
+.dt-badge,
+.dt-tag,
+.dt-tab,
+.dt-nav-label,
+.dt-qr-tab,
+.dt-gradient-tab,
+.dt-code-tab {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+}
+
+/* Drawer background touch lock: when drawer is open, background cannot be interacted with */
+body:has(.dt-sidebar[data-open-mobile="true"]),
+html:has(.dt-sidebar[data-open-mobile="true"]) {
+  overflow: hidden !important;
+  touch-action: none !important;
+  user-select: none !important;
+}
+
+.dt-sidebar-scrim {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 55 !important;
+  border: 0 !important;
+  padding: 0 !important;
+  background: rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: blur(2px) !important;
+  touch-action: none !important;
+  pointer-events: auto !important;
+}
+
+.dt-sidebar[data-open-mobile="true"] {
+  z-index: 60 !important;
+  touch-action: pan-y !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Bottom safe-area for mobile navigation */
+.dt-main {
+  padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* Modern Material 3 Form Controls & Edit Text Input (Excluding specialized toolbar inputs) */
+input[type="text"]:not(.dt-omni-input):not(.dt-http-search-input):not(.dt-search-input),
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="url"],
+textarea,
+select,
+.dt-code-field,
+.dt-ph-entry input {
+  min-height: 44px;
+  border-radius: var(--m3-radius-md) !important;
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  max-width: 100%;
+}
+
+input:focus-visible:not(.dt-omni-input):not(.dt-http-search-input),
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--primary) !important;
+  outline-offset: 1px;
+  border-color: var(--primary) !important;
+}
+
+/* Sidebar Search Input & Magnifier space */
+.dt-sidebar-search {
+  position: relative !important;
+}
+
+.dt-search-input {
+  width: 100% !important;
+  min-height: 44px !important;
+  border-radius: var(--m3-radius-md) !important;
+  border: 1px solid var(--border) !important;
+  padding-left: 2.75rem !important;
+  padding-right: 2.5rem !important;
+  font-size: 0.95rem !important;
+}
+
+.dt-search-icon {
+  left: 1rem !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  pointer-events: none !important;
+}
+
+/* Omnibox / File Search Drop Zone: single clean line highlight, normal sizing */
+.dt-omni {
+  border: 2px solid var(--border) !important;
+  border-radius: var(--m3-radius-md) !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s ease;
+}
+
+.dt-omni:focus-within {
+  border-color: var(--primary) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.dt-omni-input {
+  zoom: 1 !important;
+  font-size: 1.1rem !important;
+  min-height: 48px !important;
+  padding: 12px 16px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.dt-omni-input:focus,
+.dt-omni-input:focus-visible {
+  outline: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Seamless Rectangular Buttons for toolbars, frames, bars, segmented buttons */
+.dt-sr-btn,
+.dt-pg-mode,
+.dt-pg-countbtn,
+.dt-pg-sep,
+.dt-pg-generate,
+.dt-uuid-btn,
+.dt-qr-tab,
+.dt-qr-type,
+.dt-gradient-tab,
+.dt-gradient-type,
+.dt-masker-bar-btn,
+.sub-topbar-zoom-btn,
+.dt-omni-legend-btn,
+.dt-code-tab,
+.dt-bar-btn,
+.segmented button,
+.segmented .dt-btn,
+.dt-sub-format {
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+
+/* Standalone buttons get rounded corners */
+.dt-btn,
+.dt-icon-btn,
+a.dt-btn {
+  border-radius: var(--m3-radius-md);
+  transition: transform 0.1s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  touch-action: manipulation;
+}
+
+/* Screen Recorder: seamless rectangular buttons without corner radius */
+.dt-sr-btn {
+  border-radius: 0 !important;
+}
+
+/* Image Masker: compact icon-only layout, no broken text */
+.dt-masker-bar {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dt-masker-group {
+  flex: 0 0 auto !important;
+}
+
+.dt-masker-btn-text {
+  display: none !important;
+}
+
+.dt-masker-bar-btn {
+  padding-inline: 12px !important;
+  min-height: 44px !important;
+  border-radius: 0 !important;
+}
+
+/* Tailwind Shade Generator: smooth horizontal scroll for swatches */
+.dt-shades-strip {
+  display: flex !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dt-shades-cell {
+  min-width: 56px !important;
+  flex: 0 0 56px !important;
+}
+
+/* HTTP Status: horizontal scroll filters & clean input */
+.dt-http-filters {
+  display: flex !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dt-http-filter {
+  flex: 0 0 auto !important;
+  min-width: 60px !important;
+  white-space: nowrap !important;
+}
+
+.dt-http-search-input {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  outline: none !important;
+}
+
+/* Password Generator & UUID Creator: responsive wrapping */
+.dt-pg-bar,
+.dt-uuid-bar {
+  display: flex !important;
+  flex-wrap: wrap !important;
+}
+
+.dt-pg-modes,
+.dt-pg-strength,
+.dt-pg-generate,
+.dt-uuid-info,
+.dt-uuid-btn {
+  min-height: 44px !important;
+}
+
+/* Paper Sizes: responsive mobile layout */
+@media (max-width: 640px) {
+  .dt-paper-bar {
+    flex-wrap: wrap !important;
+  }
+  .dt-paper-bar-label {
+    flex: 0 0 100% !important;
+    border-bottom: 1px solid var(--border);
+    padding: 8px 12px !important;
+  }
+  .segmented.dt-paper-units,
+  .segmented.dt-paper-views {
+    flex: 1 1 auto !important;
+    width: auto !important;
+  }
+}
+
+/* Substrata & Errata Editor: touch balance, separated options with clean space */
+.sub-topbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding-inline: 12px !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap !important;
+  min-height: 48px !important;
+}
+
+.sub-topbar-nav {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.sub-topbar-menu-btn {
+  min-height: 34px !important;
+  padding: 6px 14px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: var(--m3-radius-sm, 8px) !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.sub-topbar-menu-btn:hover,
+.sub-topbar-menu-btn.is-open {
+  background-color: var(--accent) !important;
+  border-color: var(--border) !important;
+}
+
+.sub-topbar-divider {
+  margin-inline: 8px !important;
+  opacity: 0.6;
+}
+
+.sub-topbar-centre {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-inline: 16px !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 900px) {
+  .sub-topbar-centre {
+    position: static !important;
+    translate: none !important;
+  }
+}
+
+.sub-topbar-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-left: auto !important;
+}
+
+/* Fix Code Generator / Barcode Layout */
+.dt-code-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)) !important;
+  gap: 4px;
+  background: transparent !important;
+  border: 1px solid var(--border);
+  border-radius: var(--m3-radius-md);
+  padding: 4px;
+  overflow-x: auto;
+}
+
+.dt-code-type {
+  border-radius: var(--m3-radius-sm);
+  min-height: 42px;
+}
+
+.dt-code-stage {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img, svg {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+}
+
+/* Fix Placeholder Generator (placeholdernaekr) Layout */
+.dt-ph {
+  border-radius: var(--m3-radius-lg);
+  overflow: hidden;
+}
+
+.dt-ph-fields {
+  display: flex;
+  flex-wrap: wrap;
+
+  @media (max-width: 580px) {
+    flex-direction: column;
+    
+    .dt-ph-field:first-child {
+      border-right: none !important;
+      border-bottom: 1px solid var(--border);
+    }
+  }
+}
+
+.dt-ph-presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)) !important;
+  gap: 2px;
+  overflow-x: auto;
+}
+
+.dt-ph-preset {
+  border-radius: var(--m3-radius-sm);
+  min-height: 52px;
+  justify-content: center;
+}
+
+.dt-ph-preview-stage {
+  max-width: 100%;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img, svg {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+}
+
+/* Scroll Containers for Code Editor, Pre, Code, Tables */
+pre, code, .ProseMirror, .tableWrapper, .dt-code-tabs, .dt-tabs-list, .dt-md-tabs {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Responsive Grid for Card Layouts */
+.dt-tools-grid,
+.dt-grid {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
